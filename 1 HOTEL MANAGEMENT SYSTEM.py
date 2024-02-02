@@ -1,6 +1,9 @@
 import mysql.connector
-my_database=mysql.connector.connect(host='localhost',database='hotel',user='root',password='start12',autocommit=True)
+pass_word=input("Enter your sql password: ") 
+db=input("Enter your database name: ")
+my_database=mysql.connector.connect(host='localhost',database=db,user='root',password=pass_word,autocommit=True)
 c=my_database.cursor()
+
 if my_database.is_connected():
     print('successfully connected')
 
@@ -16,7 +19,7 @@ def menu():
     print('4. restaurant department')
     print('5. laundary department')
     print('6. game department')
-    print('7. total bill')
+    print('7. Total bill') # to evaluate overall bill from all the departments
 
 # employs...............................................................................
 # sub-functions--------------------------------------------------------------
@@ -272,12 +275,18 @@ def restaurant_bill():
     print('--------processing restaurant bill---------')
     b=0
     while True:
-               o=1
-               u= input('item')
-               y=int(input('no of items'))
+               o=0
                c=my_database.cursor()
+               u= input('Item Name:')
+               c.execute(f"SELECT * FROM  restaurant WHERE item = '{u}'")
+               r=c.fetchall()
+               while (r==[]):
+                   u= input('Item Name:')
+                   c.execute(f"SELECT * FROM  restaurant WHERE item = '{u}'")
+                   r=c.fetchall()
+               y=int(input('no of items'))
                c.execute('select* from restaurant')
-               for i in c:
+               for i in c.fetchall():
                    if i[1]==u:
                         s=i[2]
                         o=y*(s)
